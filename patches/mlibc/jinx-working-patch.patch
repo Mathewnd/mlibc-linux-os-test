@@ -1,0 +1,20 @@
+diff --git mlibc-clean/sysdeps/linux/generic/sysdeps.cpp mlibc-workdir/sysdeps/linux/generic/sysdeps.cpp
+index df78452..fb153c4 100644
+--- mlibc-clean/sysdeps/linux/generic/sysdeps.cpp
++++ mlibc-workdir/sysdeps/linux/generic/sysdeps.cpp
+@@ -2163,6 +2163,15 @@ int sys_readlink(const char *path, void *buf, size_t bufsiz, ssize_t *len) {
+ 	return 0;
+ }
+ 
++int sys_readlinkat(int dirfd, const char *path, void *buffer, size_t max_size, ssize_t *length) {
++	auto ret = do_syscall(SYS_readlinkat, dirfd, path, buffer, max_size);
++	if (int e = sc_error(ret); e)
++		return e;
++
++	*length = sc_int_result<ssize_t>(ret);
++	return 0;
++}
++
+ #if __MLIBC_BSD_OPTION
+ // getloadavg() adapted from musl
+ int sys_getloadavg(double *samples) {

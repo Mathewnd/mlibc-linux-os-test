@@ -1,0 +1,21 @@
+name=util-linux
+revision=1
+from_source=util-linux
+imagedeps="build-essential"
+hostdeps="xgcc xbinutils"
+deps="base"
+
+configure() {
+	cp -rp ${source_dir}/* .
+	./configure --host=x86_64-linux-mlibc --prefix=${prefix} --disable-all-programs --enable-mount --enable-libmount --enable-libblkid
+} 
+
+build() {
+	make -j ${parallelism}
+}
+
+package() {
+	make install DESTDIR=${dest_dir}
+	mv ${dest_dir}/lib/* ${dest_dir}/${prefix}/lib
+	rm -r ${dest_dir}/lib
+}
