@@ -1,6 +1,7 @@
 name=xgcc
 revision=1
 from_source=gcc
+clean_workdirs=no
 imagedeps="build-essential libmpfr-dev libmpc-dev libgmp-dev"
 hostdeps="xbinutils pkgconfig libtool"
 deps="mlibc-headers"
