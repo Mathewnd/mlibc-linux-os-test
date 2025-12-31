@@ -1,0 +1,18 @@
+name=libiconv
+revision=1
+from_source=libiconv
+imagedeps="build-essential"
+hostdeps="xgcc xbinutils pkgconfig libtool"
+deps="mlibc gcc-libs"
+
+configure() {
+	${source_dir}/configure --host=x86_64-linux-mlibc --prefix=${prefix} --enable-shared --disable-static
+}
+
+build() {
+	make -j ${parallelism}
+}
+
+package() {
+	make install DESTDIR=${dest_dir}
+}

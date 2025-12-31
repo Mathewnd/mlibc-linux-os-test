@@ -1,0 +1,20 @@
+name=mlibc
+from_source=mlibc
+revision=1
+imagedeps="ninja-build meson build-essential git"
+hostdeps="xgcc"
+deps="linux-headers"
+
+configure() {
+	LDFLAGS="-Wl,${source_dir}/libgcc-${JINX_ARCH}.a" meson setup --cross-file "${base_dir}/util/crossfile" --prefix="${prefix}"  -Dno_headers=true "${source_dir}" -Dlinux_kernel_headers="${sysroot_dir}/usr/include" -Dlibgcc_dependency=false -Duse_freestnd_hdrs=enabled
+}
+
+build() {
+	ninja
+}
+
+package() {
+	DESTDIR=${dest_dir} ninja install
+	ln -sv /usr/lib ${dest_dir}/lib
+	ln -sv /usr/lib64 ${dest_dir}/lib64
+}

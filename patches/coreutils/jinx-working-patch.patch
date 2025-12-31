@@ -1,0 +1,65 @@
+diff --git coreutils-clean/lib/getlocalename_l-unsafe.c coreutils-workdir/lib/getlocalename_l-unsafe.c
+index e273882..df76a67 100644
+--- coreutils-clean/lib/getlocalename_l-unsafe.c
++++ coreutils-workdir/lib/getlocalename_l-unsafe.c
+@@ -52,6 +52,12 @@
+ 
+ #if LOCALENAME_ENHANCE_LOCALE_FUNCS
+ 
++# if IN_LIBINTL
++#  define BUILDING_LIBINTL 1
++/* Get LIBINTL_SHLIB_EXPORTED.  */
++#  include "libgnuintl.h"
++# endif
++
+ # include "flexmember.h"
+ # include "glthread/lock.h"
+ # include "thread-optim.h"
+@@ -127,6 +133,9 @@ get_locale_t_name (int category, locale_t locale)
+ # endif
+ 
+ /* newlocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED locale_t newlocale (int, const char *, locale_t);
++# endif
+ locale_t
+ newlocale (int category_mask, const char *name, locale_t base)
+ #undef newlocale
+@@ -331,6 +340,9 @@ newlocale (int category_mask, const char *name, locale_t base)
+ }
+ 
+ /* duplocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED locale_t duplocale (locale_t);
++# endif
+ locale_t
+ duplocale (locale_t locale)
+ #undef duplocale
+@@ -426,6 +438,9 @@ duplocale (locale_t locale)
+ }
+ 
+ /* freelocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED void freelocale (locale_t);
++# endif
+ void
+ freelocale (locale_t locale)
+ #undef freelocale
+@@ -476,7 +491,7 @@ getlocalename_l_unsafe (int category, locale_t locale)
+ #elif __GLIBC__ >= 2 && !defined __UCLIBC__
+       /* Work around an incorrect definition of the _NL_LOCALE_NAME macro in
+          glibc < 2.12.
+-         See <https://sourceware.org/PR10968>.  */
++         See <https://sourceware.org/bugzilla/show_bug.cgi?id=10968>.  */
+       const char *name =
+         nl_langinfo_l (_NL_ITEM ((category), _NL_ITEM_INDEX (-1)), locale);
+       if (name[0] == '\0')
+@@ -668,6 +683,8 @@ getlocalename_l_unsafe (int category, locale_t locale)
+       };
+       const char *name = ((struct __locale_t *) locale)->mb_cur_max == 4 ? "C.UTF-8" : "C";
+       return (struct string_with_storage) { name, STORAGE_INDEFINITE };
++#elif defined(__mlibc__)
++      return (struct string_with_storage) { "C", STORAGE_INDEFINITE };
+ #else
+  #error "Please port gnulib getlocalename_l-unsafe.c to your platform! Report this to bug-gnulib."
+ #endif

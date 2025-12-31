@@ -1,0 +1,58 @@
+diff --git make-clean/configure.ac make-workdir/configure.ac
+index 9f68897..0e57651 100644
+--- make-clean/configure.ac
++++ make-workdir/configure.ac
+@@ -160,53 +160,6 @@ AC_STRUCT_DIRENT_D_TYPE
+ AC_ARG_WITH([guile], [AS_HELP_STRING([--with-guile],
+             [Support GNU Guile for embedded scripting])])
+ 
+-# Annoyingly, each version of Guile comes with it's own PC file so we have to
+-# specify them as individual packages.  Ugh.
+-PKG_PROG_PKG_CONFIG
+-
+-AS_IF([test "x$with_guile" != xno],
+-[ guile_versions="3.0 2.2 2.0 1.8"
+-  guile_version=no
+-  have_guile=no
+-  AC_MSG_CHECKING([for GNU Guile])
+-  for v in $guile_versions; do
+-    PKG_CHECK_EXISTS([guile-$v], [guile_version=$v; have_guile=yes; break], [])
+-  done
+-  AC_MSG_RESULT([$guile_version])
+-  AS_IF([test "$have_guile" = yes],
+-  [ PKG_CHECK_MODULES(GUILE, [guile-$guile_version])
+-    # Unfortunately pkg doesn't help in multi-arch environments where the
+-    # package is installed for some architectures but not others; we need
+-    # to try to link.
+-    keep_CPPFLAGS="$CPPFLAGS"
+-    keep_LIBS="$LIBS"
+-    CPPFLAGS="$CPPFLAGS $GUILE_CFLAGS"
+-    LIBS="$LIBS $GUILE_LIBS"
+-    AC_CHECK_HEADER([libguile.h],
+-                    [AC_DEFINE([HAVE_GUILE], [1], [Embed GNU Guile support])],
+-                    [have_guile=no],
+-                    [/* Avoid configuration error warnings. */])
+-    AS_IF([test "$have_guile" = yes],
+-    [ AC_MSG_CHECKING([whether we can link GNU Guile])
+-      AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+-#include <libguile.h>
+-static void *
+-guile_init (void *arg)
+-{
+-   (void) arg;
+-   return 0;
+-}
+-]], [[
+-    scm_with_guile (guile_init, 0);
+-]])],
+-        [have_guile=yes],
+-        [have_guile=no])
+-      AC_MSG_RESULT([$have_guile])])
+-    CPPFLAGS="$keep_CPPFLAGS"
+-    LIBS="$keep_LIBS"
+-  ])
+-])
+-
+ AM_CONDITIONAL([HAVE_GUILE], [test "$have_guile" = "yes"])
+ 
+ AC_CHECK_DECLS([sys_siglist, _sys_siglist, __sys_siglist], , ,

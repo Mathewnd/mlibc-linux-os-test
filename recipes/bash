@@ -1,0 +1,25 @@
+name=bash
+revision=1
+from_source=bash
+imagedeps="build-essential"
+hostdeps="xgcc xbinutils"
+deps="readline base"
+
+configure() {
+	cp -rp ${source_dir}/* .
+	CFLAGS="${CFLAGS} -std=gnu23" ./configure --host=x86_64-linux-mlibc --prefix=${prefix} --without-bash-malloc
+}
+
+build() {
+	make -j ${parallelism}
+}
+
+package() {
+	make install DESTDIR=${dest_dir}
+	
+	mkdir -p ${dest_dir}/bin
+	pushd ${dest_dir}/bin
+	ln -sv ${prefix}/bin/bash sh
+	ln -sv ${prefix}/bin/bash bash
+	popd
+}

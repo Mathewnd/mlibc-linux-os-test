@@ -1,0 +1,5 @@
+name=coreutils
+version=9.9
+source_method=tarball
+tarball_url="https://ftpmirror.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
+tarball_sha512=e7b0e59f7732d2c098ea4934014f470248bd5c4764210e9200a698010a8e3b95bbb26e543f0cd73ed5a4b8e1f8cda932c73f39954d68175e4deaa47526610c65

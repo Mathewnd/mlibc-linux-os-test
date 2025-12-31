@@ -1,0 +1,7 @@
+name=base-files
+revision=1
+from_source=base-files
+
+package() {
+	cp -r ${source_dir}/* ${dest_dir}
+}

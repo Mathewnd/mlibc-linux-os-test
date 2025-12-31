@@ -1,0 +1,4 @@
+name=os-test
+version=e1272e6a83f55b56af044096a74b46bfc6f991d2
+git_url="https://gitlab.com/sortix/os-test.git"
+commit=e1272e6a83f55b56af044096a74b46bfc6f991d2

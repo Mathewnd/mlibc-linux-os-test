@@ -1,0 +1,92 @@
+diff --git grep-clean/gnulib-tests/getlocalename_l-unsafe.c grep-workdir/gnulib-tests/getlocalename_l-unsafe.c
+index 6a72c81..df76a67 100644
+--- grep-clean/gnulib-tests/getlocalename_l-unsafe.c
++++ grep-workdir/gnulib-tests/getlocalename_l-unsafe.c
+@@ -14,6 +14,10 @@
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+ 
++/* Don't use __attribute__ __nonnull__ in this compilation unit.  Otherwise gcc
++   optimizes away the locale == NULL tests below.  */
++#define _GL_ARG_NONNULL(params)
++
+ #include <config.h>
+ 
+ /* Specification.  */
+@@ -48,6 +52,12 @@
+ 
+ #if LOCALENAME_ENHANCE_LOCALE_FUNCS
+ 
++# if IN_LIBINTL
++#  define BUILDING_LIBINTL 1
++/* Get LIBINTL_SHLIB_EXPORTED.  */
++#  include "libgnuintl.h"
++# endif
++
+ # include "flexmember.h"
+ # include "glthread/lock.h"
+ # include "thread-optim.h"
+@@ -123,6 +133,9 @@ get_locale_t_name (int category, locale_t locale)
+ # endif
+ 
+ /* newlocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED locale_t newlocale (int, const char *, locale_t);
++# endif
+ locale_t
+ newlocale (int category_mask, const char *name, locale_t base)
+ #undef newlocale
+@@ -327,6 +340,9 @@ newlocale (int category_mask, const char *name, locale_t base)
+ }
+ 
+ /* duplocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED locale_t duplocale (locale_t);
++# endif
+ locale_t
+ duplocale (locale_t locale)
+ #undef duplocale
+@@ -422,6 +438,9 @@ duplocale (locale_t locale)
+ }
+ 
+ /* freelocale() override.  */
++# if IN_LIBINTL
++extern LIBINTL_SHLIB_EXPORTED void freelocale (locale_t);
++# endif
+ void
+ freelocale (locale_t locale)
+ #undef freelocale
+@@ -546,8 +565,14 @@ getlocalename_l_unsafe (int category, locale_t locale)
+       /* We shouldn't get here.  */
+       return (struct string_with_storage) { "", STORAGE_INDEFINITE };
+ # else
+-      /* Solaris 11 OpenIndiana.
+-         For the internal structure of locale objects, see
++      /* Solaris 11 OpenIndiana or Solaris 11 OmniOS.  */
++#  if HAVE_GETLOCALENAME_L
++      /* illumos after April 2025.  */
++#   undef getlocalename_l
++      const char *name = getlocalename_l (category, locale);
++      return (struct string_with_storage) { name, STORAGE_OBJECT };
++#  else
++      /* For the internal structure of locale objects, see
+          https://github.com/OpenIndiana/illumos-gate/blob/master/usr/src/lib/libc/port/locale/localeimpl.h  */
+       switch (category)
+         {
+@@ -564,6 +589,7 @@ getlocalename_l_unsafe (int category, locale_t locale)
+         default: /* We shouldn't get here.  */
+           return (struct string_with_storage) { "", STORAGE_INDEFINITE };
+         }
++#  endif
+ # endif
+ #elif HAVE_NAMELESS_LOCALES
+       /* OpenBSD >= 6.2, AIX >= 7.1 */
+@@ -657,6 +683,8 @@ getlocalename_l_unsafe (int category, locale_t locale)
+       };
+       const char *name = ((struct __locale_t *) locale)->mb_cur_max == 4 ? "C.UTF-8" : "C";
+       return (struct string_with_storage) { name, STORAGE_INDEFINITE };
++#elif defined(__mlibc__)
++      return (struct string_with_storage) { "C", STORAGE_INDEFINITE };
+ #else
+  #error "Please port gnulib getlocalename_l-unsafe.c to your platform! Report this to bug-gnulib."
+ #endif

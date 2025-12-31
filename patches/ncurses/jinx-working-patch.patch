@@ -1,0 +1,61 @@
+diff --git ncurses-clean/ncurses/curses.priv.h ncurses-workdir/ncurses/curses.priv.h
+index 68cda17..0225610 100644
+--- ncurses-clean/ncurses/curses.priv.h
++++ ncurses-workdir/ncurses/curses.priv.h
+@@ -47,6 +47,7 @@
+ #ifndef CURSES_PRIV_H
+ #define CURSES_PRIV_H 1
+ /* *INDENT-OFF* */
++#define _XOPEN_SOURCE
+ 
+ #include <ncurses_dll.h>
+ 
+@@ -68,6 +69,10 @@ extern "C" {
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ 
++#ifdef __mlibc__
++#include <wchar.h>
++#endif
++
+ #if HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+diff --git ncurses-clean/ncurses/tinfo/getenv_num.c ncurses-workdir/ncurses/tinfo/getenv_num.c
+index ca179d3..569db68 100644
+--- ncurses-clean/ncurses/tinfo/getenv_num.c
++++ ncurses-workdir/ncurses/tinfo/getenv_num.c
+@@ -35,6 +35,7 @@
+  *	getenv_num.c -- obtain a number from the environment
+  */
+ 
++#define _POSIX_C_SOURCE 200112L
+ #include <curses.priv.h>
+ 
+ MODULE_ID("$Id: getenv_num.c,v 1.8 2020/02/02 23:34:34 tom Exp $")
+diff --git ncurses-clean/test/ins_wide.c ncurses-workdir/test/ins_wide.c
+index a732449..531f149 100644
+--- ncurses-clean/test/ins_wide.c
++++ ncurses-workdir/test/ins_wide.c
+@@ -42,6 +42,9 @@
+  * and does not document how tabs are handled.
+  */
+ 
++#define _XOPEN_SOURCE
++#include <wchar.h>
++
+ #include <test.priv.h>
+ 
+ #if USE_WIDEC_SUPPORT
+diff --git ncurses-clean/test/key_names.c ncurses-workdir/test/key_names.c
+index fa7fdba..45a70ae 100644
+--- ncurses-clean/test/key_names.c
++++ ncurses-workdir/test/key_names.c
+@@ -30,6 +30,7 @@
+  * $Id: key_names.c,v 1.11 2022/12/04 00:40:11 tom Exp $
+  */
+ 
++#define _XOPEN_SOURCE
+ #include <test.priv.h>
+ 
+ #if USE_WIDEC_SUPPORT

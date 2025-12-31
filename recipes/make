@@ -1,0 +1,19 @@
+name=make
+revision=1
+from_source=make
+imagedeps="build-essential autoconf automake"
+hostdeps="xgcc xbinutils pkgconfig libtool"
+deps="base"
+
+configure() {
+	cp -rp ${source_dir}/* .
+	./configure --host=x86_64-linux-mlibc --prefix=${prefix}
+}
+
+build() {
+	make -j ${parallelism}
+}
+
+package() {
+	make install DESTDIR=${dest_dir}
+}

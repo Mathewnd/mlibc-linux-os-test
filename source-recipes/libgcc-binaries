@@ -1,0 +1,5 @@
+name=libgcc-binaries
+version=2025-12-08
+source_method=tarball
+tarball_url=https://github.com/osdev0/libgcc-binaries/releases/download/2025-12-08/libgcc-x86_64
+tarball_sha512=1234

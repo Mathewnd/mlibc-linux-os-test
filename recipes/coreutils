@@ -1,0 +1,19 @@
+name=coreutils
+revision=1
+from_source=coreutils
+imagedeps="build-essential gperf"
+hostdeps="xgcc xbinutils"
+deps="base"
+
+configure() {
+	cp -pr ${source_dir}/* .
+	./configure --host=x86_64-linux-mlibc --prefix=${prefix}
+}
+
+build() {
+	make -j ${parallelism}
+}
+
+package() {
+	make install DESTDIR=${dest_dir}
+}

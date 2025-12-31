@@ -1,0 +1,18 @@
+name=gcc-libs
+from_source=gcc
+revision=1
+imagedeps="build-essential rsync"
+hostdeps="xgcc xbinutils"
+deps="mlibc mlibc-headers"
+
+build() {
+	cd "${base_dir}"/build-${JINX_ARCH}/host-builds/xgcc/ && make all-target-libgcc all-target-libstdc++-v3 -j${parallelism}
+}
+
+package() {
+	cd "${base_dir}"/build-${JINX_ARCH}/host-builds/xgcc/ && make install-target-libgcc install-target-libstdc++-v3 DESTDIR="${PWD}/collect_dir"
+	# install in the right prefix
+	cp -rp collect_dir/usr/local/* "${dest_dir}/${prefix}/"
+	cp -rp collect_dir/usr/local/x86_64-linux-mlibc/* "${dest_dir}/${prefix}/"
+	cp -rp collect_dir/usr/local/lib/gcc "${build_dir}/host-pkgs/xgcc/usr/local/lib"
+}

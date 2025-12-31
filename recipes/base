@@ -1,0 +1,4 @@
+name=base
+version=1
+revision=1
+deps="mlibc libintl gcc-libs libiconv libxcrypt"
