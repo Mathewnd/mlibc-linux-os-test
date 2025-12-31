@@ -16,7 +16,7 @@ test:
 	sudo chroot sysroot /usr/bin/run-os-test.sh
 
 html:
-	make -C sysroot/usr/share/os-test OS=mlibc html
+	./generate-html.sh
 
 jinx:
 	curl --raw https://codeberg.org/Mintsuki/jinx/raw/commit/$(JINX_COMMIT)/jinx > jinx
