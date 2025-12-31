@@ -18,12 +18,21 @@ jobs:
     - name: Install dependencies
       run: | 
         sudo apt-get update
-        sudo apt-get install zlib1g-dev libssl-dev libarchive-dev procps util-linux zstd wget tar pkg-config perl gzip grep git findutils build-essential gawk bash
+        sudo apt-get install zlib1g-dev libssl-dev libarchive-dev procps util-linux zstd wget tar pkg-config perl gzip grep git findutils build-essential gawk bash git unzip
+
     - name: Build sysroot
       run: JINX_CLEAN_WORKDIRS=yes make
 
-    - name: Run 
+    - name: Run os-test
       run: make test
 
-    - name: Html
+    - name: Create html
       run: make html
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v4
+      with:
+        path: ./sysroot/usr/share/os-test/html
+
+    - name: Deploy to github pages
+      uses: actions/deploy-pages@v4
