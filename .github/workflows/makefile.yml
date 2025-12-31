@@ -3,8 +3,6 @@ name: Build and Run
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -22,7 +20,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install zlib1g-dev libssl-dev libarchive-dev procps util-linux zstd wget tar pkg-config perl gzip grep git findutils build-essential gawk bash
     - name: Build sysroot
-      run: make
+      run: JINX_CLEAN_WORKDIRS=yes make
 
     - name: Run 
       run: make test
