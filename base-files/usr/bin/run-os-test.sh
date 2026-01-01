@@ -10,6 +10,11 @@ if [ ! -f /dev/zero ]; then
 	chown root:root /dev/zero
 fi
 
+if [ ! -f /dev/tty ]; then
+	mknod -m 666 /dev/tty c 5 0
+	chown root:root /dev/tty
+fi
+
 mkdir -p /dev/pts
 mount -t devpts pts /dev/pts
 ln -s /dev/pts/ptmx /dev/ptmx
