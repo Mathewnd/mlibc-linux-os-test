@@ -1,0 +1,5 @@
+name=freestnd-c-hdrs
+version=d33711241b46ecb8f2ad33927fcefdcb3ac0162e
+source_method=git
+git_url=https://codeberg.org/OSDev/freestnd-c-hdrs.git
+commit=d33711241b46ecb8f2ad33927fcefdcb3ac0162e
