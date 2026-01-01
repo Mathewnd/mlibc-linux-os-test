@@ -7,7 +7,7 @@ deps="base"
 
 build() {
 	cp -rpa ${source_dir}/* .
-	make -j${parallelism} EXTRA_LDFLAGS="-lcrypt -lintl -liconv" OS=mlibc CC=x86_64-linux-mlibc-gcc CC_FOR_BUILD=gcc
+	make -j${parallelism} LDFLAGS_FOR_BUILD="" EXTRA_LDFLAGS="-lcrypt -lintl -liconv" OS=mlibc CC=x86_64-linux-mlibc-gcc CC_FOR_BUILD=gcc
 }
 
 package() {
