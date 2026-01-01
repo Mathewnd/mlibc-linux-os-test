@@ -134,7 +134,7 @@ index a7248ac..7a892f4 100644
  /* Whether we have Bionic libc runtime */
  #undef TARGET_HAS_BIONIC
 diff --git gcc-clean/gcc/config.gcc gcc-workdir/gcc/config.gcc
-index a3566f5..bdb19c0 100644
+index a3566f5..8a134ca 100644
 --- gcc-clean/gcc/config.gcc
 +++ gcc-workdir/gcc/config.gcc
 @@ -693,7 +693,7 @@ case ${target} in
@@ -156,6 +156,22 @@ index a3566f5..bdb19c0 100644
      *)
        tm_defines="$tm_defines DEFAULT_LIBC=LIBC_GLIBC"
        ;;
+@@ -926,7 +929,14 @@ case ${target} in
+   # Assume that glibc or uClibc or Bionic are being used and so __cxa_atexit
+   # is provided.
+   default_use_cxa_atexit=yes
+-  use_gcc_tgmath=no
++  case $target in
++    *-*-*mlibc*)
++      use_gcc_tgmath=yes
++      ;;
++    *)
++      use_gcc_tgmath=no
++      ;;
++  esac
+   use_gcc_stdint=wrap
+   # Enable compilation for Android by default for *android* targets.
+   case $target in
 diff --git gcc-clean/libgcc/config.host gcc-workdir/libgcc/config.host
 index ee10e99..e72b6b9 100644
 --- gcc-clean/libgcc/config.host
