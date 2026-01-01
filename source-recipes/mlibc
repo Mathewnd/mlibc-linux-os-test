@@ -1,8 +1,8 @@
 name=mlibc
-version=1b9dc423a6fc3289d0357e238f6c72a3a739ab82
-source_method=tarball
-tarball_url="https://github.com/managarm/mlibc/archive/${version}.tar.gz"
-tarball_sha512="704c836ee03d040db702240aa6c30102a42b5399eab718824ac8c8a5196b9084b934d82199ceabcbf3bc0ced5c533b07eb083d9c8b098cb3af036239084041e1"
+version=1
+source_method=git
+git_url="https://github.com/managarm/mlibc.git"
+use_master=yes
 imagedeps="wget"
 allow_network=true
 

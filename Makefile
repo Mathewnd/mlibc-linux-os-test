@@ -20,4 +20,5 @@ html:
 
 jinx:
 	curl --raw https://codeberg.org/Mintsuki/jinx/raw/commit/$(JINX_COMMIT)/jinx > jinx
+	cat jinx.patch | patch
 	chmod +x jinx

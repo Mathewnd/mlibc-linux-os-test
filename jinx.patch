@@ -1,0 +1,42 @@
+diff --git a/jinx b/jinx
+index 065ff7e..4a4650c 100755
+--- a/jinx
++++ b/jinx
+@@ -714,19 +714,27 @@ destroy_container() {
+ }
+ 
+ do_git_fetch() {
+-    if [ -z "${commit}" ]; then
+-        die "* error: Git commit not specified"
+-    fi
++    if [ "${use_master}" != "yes" ]; then
++        if [ -z "${commit}" ]; then
++            die "* error: Git commit not specified"
++        fi
+ 
+-    if ! ( echo "${commit}" | grep -qE '^[0-9a-f]{40}$' ); then
+-        die "* error: Invalid commit hash"
+-    fi
++        if ! ( echo "${commit}" | grep -qE '^[0-9a-f]{40}$' ); then
++            die "* error: Invalid commit hash"
++        fi
+ 
+-    if [ "${shallow}" = "no" ]; then
+-        git clone "${git_url}" "${base_dir}"/sources/${name}
+-        git -C "${base_dir}"/sources/${name} -c advice.detachedHead=false checkout "${commit}"
++        if [ "${shallow}" = "no" ]; then
++            git clone "${git_url}" "${base_dir}"/sources/${name}
++            git -C "${base_dir}"/sources/${name} -c advice.detachedHead=false checkout "${commit}"
++        else
++            git clone "${git_url}" -c advice.detachedHead=false --revision="${commit}" --depth=1 "${base_dir}"/sources/${name}
++        fi
+     else
+-        git clone "${git_url}" -c advice.detachedHead=false --revision="${commit}" --depth=1 "${base_dir}"/sources/${name}
++        if [ "${shallow}" = "no" ]; then
++            git clone "${git_url}" "${base_dir}"/sources/${name}
++        else
++            git clone "${git_url}" --depth=1 "${base_dir}"/sources/${name}
++        fi
+     fi
+ }
+ 
