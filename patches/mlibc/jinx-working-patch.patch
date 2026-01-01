@@ -1,8 +1,22 @@
 diff --git mlibc-clean/sysdeps/linux/generic/sysdeps.cpp mlibc-workdir/sysdeps/linux/generic/sysdeps.cpp
-index df78452..fb153c4 100644
+index 34a5690..b4ea80e 100644
 --- mlibc-clean/sysdeps/linux/generic/sysdeps.cpp
 +++ mlibc-workdir/sysdeps/linux/generic/sysdeps.cpp
-@@ -2163,6 +2163,15 @@ int sys_readlink(const char *path, void *buf, size_t bufsiz, ssize_t *len) {
+@@ -2098,6 +2098,13 @@ int sys_sigsuspend(const sigset_t *set) {
+ 	return 0;
+ }
+ 
++int sys_sigpending(sigset_t *set) {
++	auto ret = do_syscall(SYS_sigpending, set);
++	if (int e = sc_error(ret); e)
++		return e;
++	return 0;
++}
++
+ int sys_sigaltstack(const stack_t *ss, stack_t *oss) {
+ 	auto ret = do_syscall(SYS_sigaltstack, ss, oss);
+ 	if (int e = sc_error(ret); e)
+@@ -2204,6 +2211,14 @@ int sys_readlink(const char *path, void *buf, size_t bufsiz, ssize_t *len) {
  	return 0;
  }
  
@@ -10,7 +24,6 @@ index df78452..fb153c4 100644
 +	auto ret = do_syscall(SYS_readlinkat, dirfd, path, buffer, max_size);
 +	if (int e = sc_error(ret); e)
 +		return e;
-+
 +	*length = sc_int_result<ssize_t>(ret);
 +	return 0;
 +}
