@@ -19,6 +19,9 @@ mkdir -p /dev/pts
 mount -t devpts pts /dev/pts
 ln -s /dev/pts/ptmx /dev/ptmx
 
+mkdir -p /proc
+mount -t proc proc /proc
+
 mkdir -p /tmp
 
 set +e
@@ -26,3 +29,4 @@ cd /usr/share/os-test
 make test OS=mlibc
 
 umount /dev/pts
+umount /proc

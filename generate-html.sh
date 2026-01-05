@@ -13,7 +13,7 @@ else
 	cd ..
 fi
 
-cp -rav os-test-results/outcomes/* ../sysroot/usr/share/os-test/out/
+cp -ra os-test-results/outcomes/* ../sysroot/usr/share/os-test/out/
 rm -r ../sysroot/usr/share/os-test/out/managarm
 
 # download latest managarm results from CI
